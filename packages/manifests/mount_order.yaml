@@ -1,0 +1,5 @@
+mount_order:
+  - engine/common
+  - shared/franchise_core
+  - games/game_alpha/content
+  - packages/overrides_dev
