@@ -1,8 +1,11 @@
 // Platform abstraction layer
-#pragma once
+#ifndef PLATFORM_H
+#define PLATFORM_H
 
 class Platform {
 public:
-    virtual void Init() = 0;
-    virtual void Shutdown() = 0;
+    virtual void Initialize() = 0;
+    // Other platform-specific methods
 };
+
+#endif // PLATFORM_H
