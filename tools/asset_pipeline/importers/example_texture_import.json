@@ -1,0 +1,11 @@
+{
+  "asset": "textures/props/metal_panel_a.png",
+  "importer": "texture",
+  "settings": {
+    "compression": "BC7",
+    "srgb": true,
+    "generateMipmaps": true,
+    "normalMap": false
+  },
+  "output": "materials/props/metal_panel_a.rmat"
+}
