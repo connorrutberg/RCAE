@@ -346,3 +346,156 @@ mount_order:
 This architecture direction is intentionally private while internal workflows, editor UX, and compatibility policy are still evolving.
 
 If external sharing is needed later, publish a reduced public-facing architecture brief that omits branch strategy, migration policy details, and internal packaging constraints.
+
+## 11) Source 2 Reference Snapshot (Engine + Development Process)
+
+Source 2 is Valve's modern, data-driven engine architecture and the successor to Source 1. It is used in projects such as Dota 2, Half-Life: Alyx, and Counter-Strike 2, and emphasizes shared tooling, scalability, and high iteration speed across teams.
+
+### Core engine characteristics
+
+- **Modern rendering architecture**
+  - Vulkan-first rendering backend
+  - Physically based rendering (PBR)
+  - Advanced lighting and material workflows
+  - Built for large, high-fidelity environments
+- **Data-driven and modular design**
+  - Systems are designed for reuse across multiple games
+  - Shared tooling and asset pipelines reduce per-title duplication
+  - Strong separation between engine systems and game-specific logic
+- **Multithreaded core**
+  - Parallel-by-design runtime architecture
+  - Better scaling on modern multi-core CPUs than Source 1-era assumptions
+- **Integrated toolchain**
+  - Unified editor environment
+  - Real-time asset compilation
+  - Tight edit -> compile -> test iteration loop
+
+### Development process focus
+
+Valve's Source 2 workflow centers on rapid iteration and common infrastructure:
+
+1. **Unified tools**
+   - Projects use common editor and asset tooling
+   - Standardized asset formats across projects
+   - Tooling upgrades benefit all active products
+   - Shared subsystems (for example UI, physics, networking layers) are reusable
+2. **Content pipeline**
+   - Assets are authored in external DCC tools
+   - Content is compiled into optimized runtime formats
+   - Data-driven definitions control runtime behavior
+3. **Modular game code**
+   - Game-specific logic sits on top of shared engine/runtime systems
+   - Components can be moved between products when applicable
+   - Teams are encouraged to reuse systems rather than duplicate implementations
+4. **Fast iteration**
+   - Real-time previews inside tools
+   - Strong debugging and inspection tooling
+   - Workflow designed to minimize compile/test latency
+
+### High-level philosophy
+
+Source 2's value is not only visual fidelity. Its architecture also prioritizes:
+
+- Scalability
+- Reusable systems across projects
+- Efficient content pipelines
+- High-performance multithreaded execution
+- Long-term maintainability
+
+## 12) From Architecture Notes to a Functional Engine (Execution Plan)
+
+Short answer: not from documentation alone. A production-ready engine requires an incremental implementation plan, automated validation, and shipping targets. The practical approach is to build a vertical slice, then scale subsystem by subsystem.
+
+### Practical build sequence
+
+1. **Runtime foundation**
+   - Main loop and frame pacing
+   - Memory/resource ownership model
+   - Logging and diagnostics
+2. **World model**
+   - Entity/component data model
+   - Deterministic update ordering
+   - Save/load serialization
+3. **Content path**
+   - Import -> validate -> cook pipeline
+   - Stable runtime package format
+4. **Rendering + simulation baseline**
+   - Minimal renderer with materials and camera
+   - Physics/movement integration with test scenes
+5. **Tools and iteration**
+   - Scene editor bindings
+   - Hot-reload for script/content changes
+   - Profiling and debugging instrumentation
+6. **Production hardening**
+   - CI with functional/regression tests
+   - Platform matrix and compatibility testing
+   - Upgrade/migration policy across titles
+
+### Current repository scope
+
+The current repo now includes a minimal C++ runtime slice (`MiniEngine`) with:
+- entity creation
+- transform/velocity updates
+- collision against a tile map
+- frame rendering to text output
+
+This is intentionally a prototype runtime slice, not a complete shipping engine. It is meant to prove core loop behavior and provide a foundation for the next layers (renderer, physics depth, scripting host, editor integration, packaging, and platform services).
+
+## 13) Recommended Split: C# Front-End Workflows + C++ Runtime Back-End
+
+Yes—this is the preferred direction for RCAE iteration speed and runtime performance.
+
+### What should live in C# (front-end/tooling/gameplay layer)
+- Editor UX and panels (inspector, explorers, timeline, property editing)
+- Gameplay scripting APIs and content-authoring behaviors
+- Rapid iteration features (hot reload, validation UI, debugging views)
+- Visual workflow orchestration (selection binding, script component wiring)
+
+### What should live in C++ (back-end/runtime layer)
+- Frame loop, ECS storage/update, memory/resource systems
+- Rendering backend and render graph integration
+- Physics simulation/movement authority and deterministic update paths
+- Asset streaming, package IO, and platform-specific performance paths
+
+### Interop model
+- Keep a narrow native ABI boundary (C ABI) between C# and C++.
+- Use C# `DllImport` for tool/runtime bridge calls.
+- Keep ownership semantics explicit (who allocates/frees native handles).
+- Prefer command-style calls and plain data structs at the boundary.
+
+### Repository implementation status
+- Native C++ runtime remains in `MiniEngine`.
+- A C ABI wrapper is now available in `MiniEngineCAPI`.
+- A C# bridge sample (`MiniEngineNativeBridge.cs`) demonstrates calling native runtime from managed tooling.
+
+## 14) Rendering Baseline (Current Implementation)
+
+To begin Section 4 execution, RCAE now has a concrete renderer baseline with clear responsibilities:
+
+- `Renderer2D` provides deterministic frame composition for sprite instances.
+- `Camera2D` defines viewport bounds.
+- `Material` and `SpriteInstance` define draw metadata and per-instance layer ordering.
+- Draw order is resolved by layer so higher-priority visuals override lower layers at the same pixel.
+
+This establishes a production-oriented rendering seam that can evolve into:
+- backend abstraction (Vulkan/other APIs)
+- material/shader systems
+- scene traversal and batching
+- profiling and frame diagnostics
+
+## 15) Post-Rendering Step Implemented: Scene Simulation -> Render Integration
+
+To move beyond isolated rendering, RCAE now includes a `SceneWorld` integration layer that:
+
+- owns scene entities with `Transform2D`, `Velocity2D`, and `Renderable2D`
+- runs simulation ticks that advance transforms
+- builds render submission instances from world state
+- renders through `Renderer2D` via camera-defined view
+
+This forms the first deterministic frame pipeline seam:
+
+1. world state update (`tick`)
+2. render instance extraction (`buildRenderInstances`)
+3. frame composition (`Renderer2D::renderFrame`)
+
+This is the correct next step after renderer baseline because it connects gameplay state to rendering output in a testable way.
