@@ -499,3 +499,13 @@ This forms the first deterministic frame pipeline seam:
 3. frame composition (`Renderer2D::renderFrame`)
 
 This is the correct next step after renderer baseline because it connects gameplay state to rendering output in a testable way.
+
+## 16) Movement Authority + Collision Layers (Current Implementation)
+
+`SceneWorld` now includes first-pass gameplay movement authority controls:
+
+- world bounds are authoritative (`setWorldBounds`)
+- entity colliders define layer and collision masks
+- blocking movement checks occur during `tick` before transform commit
+
+This adds a practical rule set for deterministic movement decisions and establishes the base for future collision channels, triggers, and character controller specialization.
