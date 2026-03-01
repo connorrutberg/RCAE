@@ -32,3 +32,9 @@ RCAE/
 
 - `README.md`: Overview and documentation for the project.
 - `requirements.txt`: Python package dependencies.
+
+## Delivery Plan
+
+For a section-by-section path to a full engine (with push checkpoints and acceptance gates), see:
+
+- `docs/ENGINE_DELIVERY_SECTIONS.md`

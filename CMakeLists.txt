@@ -5,6 +5,23 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+add_library(rcae_runtime_lib
+    engine/runtime/mini/MiniEngine.cpp
+)
+target_include_directories(rcae_runtime_lib PUBLIC include)
+set_target_properties(rcae_runtime_lib PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+add_library(rcae_runtime_capi SHARED
+    engine/runtime/mini/MiniEngineCAPI.cpp
+)
+target_link_libraries(rcae_runtime_capi PRIVATE rcae_runtime_lib)
+target_include_directories(rcae_runtime_capi PUBLIC include)
+
+add_library(rcae_rendering_lib
+    engine/rendering/Renderer.cpp
+)
+target_include_directories(rcae_rendering_lib PUBLIC include)
+
 add_library(rcae_editor_lib
     tools/editor_cpp/src/EditorApp.cpp
 )
@@ -14,7 +31,27 @@ target_include_directories(rcae_editor_lib PUBLIC tools/editor_cpp/include)
 add_executable(rcae_editor tools/editor_cpp/src/main.cpp)
 target_link_libraries(rcae_editor PRIVATE rcae_editor_lib)
 
+add_executable(rcae_game_runtime_demo tools/game_runtime_demo.cpp)
+target_link_libraries(rcae_game_runtime_demo PRIVATE rcae_runtime_lib)
+
+add_executable(rcae_rendering_demo tools/rendering/rendering_demo.cpp)
+target_link_libraries(rcae_rendering_demo PRIVATE rcae_rendering_lib)
+
 enable_testing()
+
 add_executable(rcae_editor_tests tests/cpp/test_editor.cpp)
 target_link_libraries(rcae_editor_tests PRIVATE rcae_editor_lib)
 add_test(NAME rcae_editor_tests COMMAND rcae_editor_tests)
+
+add_executable(rcae_mini_engine_tests tests/cpp/test_mini_engine.cpp)
+target_link_libraries(rcae_mini_engine_tests PRIVATE rcae_runtime_lib)
+add_test(NAME rcae_mini_engine_tests COMMAND rcae_mini_engine_tests)
+
+add_executable(rcae_mini_engine_capi_tests tests/cpp/test_mini_engine_capi.cpp)
+target_link_libraries(rcae_mini_engine_capi_tests PRIVATE rcae_runtime_capi)
+add_test(NAME rcae_mini_engine_capi_tests COMMAND rcae_mini_engine_capi_tests)
+set_target_properties(rcae_mini_engine_capi_tests PROPERTIES BUILD_RPATH "$<TARGET_FILE_DIR:rcae_runtime_capi>")
+
+add_executable(rcae_renderer_tests tests/cpp/test_renderer.cpp)
+target_link_libraries(rcae_renderer_tests PRIVATE rcae_rendering_lib)
+add_test(NAME rcae_renderer_tests COMMAND rcae_renderer_tests)
