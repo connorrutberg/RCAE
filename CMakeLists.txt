@@ -28,12 +28,6 @@ add_library(rcae_scene_lib
 target_include_directories(rcae_scene_lib PUBLIC include)
 target_link_libraries(rcae_scene_lib PUBLIC rcae_rendering_lib)
 
-add_library(rcae_game_runtime_lib
-    engine/runtime/GameRuntimeApp.cpp
-)
-target_include_directories(rcae_game_runtime_lib PUBLIC include)
-target_link_libraries(rcae_game_runtime_lib PUBLIC rcae_scene_lib)
-
 add_library(rcae_editor_lib
     tools/editor_cpp/src/EditorApp.cpp
 )
