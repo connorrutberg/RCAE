@@ -35,6 +35,7 @@ class Renderer2D {
 public:
     std::string renderFrame(const Camera2D& camera,
                             const std::vector<SpriteInstance>& instances,
+                            char clearGlyph = '.') const;
                             char clearGlyph = '.');
 
 private:

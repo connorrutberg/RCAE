@@ -22,6 +22,12 @@ add_library(rcae_rendering_lib
 )
 target_include_directories(rcae_rendering_lib PUBLIC include)
 
+add_library(rcae_scene_lib
+    engine/runtime/scene/SceneWorld.cpp
+)
+target_include_directories(rcae_scene_lib PUBLIC include)
+target_link_libraries(rcae_scene_lib PUBLIC rcae_rendering_lib)
+
 add_library(rcae_editor_lib
     tools/editor_cpp/src/EditorApp.cpp
 )
@@ -36,6 +42,9 @@ target_link_libraries(rcae_game_runtime_demo PRIVATE rcae_runtime_lib)
 
 add_executable(rcae_rendering_demo tools/rendering/rendering_demo.cpp)
 target_link_libraries(rcae_rendering_demo PRIVATE rcae_rendering_lib)
+
+add_executable(rcae_scene_world_demo tools/scene/scene_world_demo.cpp)
+target_link_libraries(rcae_scene_world_demo PRIVATE rcae_scene_lib)
 
 enable_testing()
 
@@ -55,3 +64,7 @@ set_target_properties(rcae_mini_engine_capi_tests PROPERTIES BUILD_RPATH "$<TARG
 add_executable(rcae_renderer_tests tests/cpp/test_renderer.cpp)
 target_link_libraries(rcae_renderer_tests PRIVATE rcae_rendering_lib)
 add_test(NAME rcae_renderer_tests COMMAND rcae_renderer_tests)
+
+add_executable(rcae_scene_world_tests tests/cpp/test_scene_world.cpp)
+target_link_libraries(rcae_scene_world_tests PRIVATE rcae_scene_lib)
+add_test(NAME rcae_scene_world_tests COMMAND rcae_scene_world_tests)

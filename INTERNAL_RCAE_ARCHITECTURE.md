@@ -482,3 +482,39 @@ This establishes a production-oriented rendering seam that can evolve into:
 - material/shader systems
 - scene traversal and batching
 - profiling and frame diagnostics
+
+## 15) Post-Rendering Step Implemented: Scene Simulation -> Render Integration
+
+To move beyond isolated rendering, RCAE now includes a `SceneWorld` integration layer that:
+
+- owns scene entities with `Transform2D`, `Velocity2D`, and `Renderable2D`
+- runs simulation ticks that advance transforms
+- builds render submission instances from world state
+- renders through `Renderer2D` via camera-defined view
+
+This forms the first deterministic frame pipeline seam:
+
+1. world state update (`tick`)
+2. render instance extraction (`buildRenderInstances`)
+3. frame composition (`Renderer2D::renderFrame`)
+
+This is the correct next step after renderer baseline because it connects gameplay state to rendering output in a testable way.
+
+## 16) Movement Authority + Collision Layers (Current Implementation)
+
+`SceneWorld` now includes first-pass gameplay movement authority controls:
+
+- world bounds are authoritative (`setWorldBounds`)
+- entity colliders define layer and collision masks
+- blocking movement checks occur during `tick` before transform commit
+
+This adds a practical rule set for deterministic movement decisions and establishes the base for future collision channels, triggers, and character controller specialization.
+
+## 17) Axis-Separated Movement and Trigger Events
+
+`SceneWorld` now supports two additional gameplay-runtime behaviors:
+
+- axis-separated movement resolution (X then Y) to allow sliding when only one axis is blocked
+- trigger event collection (`consumeTriggerEvents`) for non-blocking gameplay volumes
+
+This keeps deterministic movement authority while adding practical gameplay signaling needed for interactions (checkpoints, doors, scripted beats, etc.).
