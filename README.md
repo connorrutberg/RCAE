@@ -4,19 +4,16 @@ This is the complete project structure for the RCAE my custom game engine that i
 
 ## Core Engine Files
 
-- `engine.py`: Contains the main engine class and logic.
-- `utils.py`: Utility functions used by the engine.
-- `config.py`: Configuration settings for the engine.
+- `engine.h`: Contains the main engine class and logic.
+- `Replace Me`: replace this later when i got stuff.
 
 ## Test Files
 
-- `test_engine.py`: Unit tests for the engine functionality.
-- `test_utils.py`: Unit tests for utility functions.
+- `Replace Me`: replace this later when i got stuff.
 
 ## Other Files
 
-- `README.md`: Overview and documentation for the project.
-- `requirements.txt`: Python package dependencies.
+- `Replace Me`: replace this later when i got stuff.
 
 ## Delivery Plan
 
