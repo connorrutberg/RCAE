@@ -40,6 +40,9 @@ target_link_libraries(rcae_editor PRIVATE rcae_editor_lib)
 add_executable(rcae_game_runtime_demo tools/game_runtime_demo.cpp)
 target_link_libraries(rcae_game_runtime_demo PRIVATE rcae_runtime_lib)
 
+add_executable(rcae_game_app tools/game_app/main.cpp)
+target_link_libraries(rcae_game_app PRIVATE rcae_game_runtime_lib)
+
 add_executable(rcae_rendering_demo tools/rendering/rendering_demo.cpp)
 target_link_libraries(rcae_rendering_demo PRIVATE rcae_rendering_lib)
 
@@ -68,3 +71,7 @@ add_test(NAME rcae_renderer_tests COMMAND rcae_renderer_tests)
 add_executable(rcae_scene_world_tests tests/cpp/test_scene_world.cpp)
 target_link_libraries(rcae_scene_world_tests PRIVATE rcae_scene_lib)
 add_test(NAME rcae_scene_world_tests COMMAND rcae_scene_world_tests)
+
+add_executable(rcae_game_runtime_app_tests tests/cpp/test_game_runtime_app.cpp)
+target_link_libraries(rcae_game_runtime_app_tests PRIVATE rcae_game_runtime_lib)
+add_test(NAME rcae_game_runtime_app_tests COMMAND rcae_game_runtime_app_tests)

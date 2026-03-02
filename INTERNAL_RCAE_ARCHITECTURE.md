@@ -518,3 +518,16 @@ This adds a practical rule set for deterministic movement decisions and establis
 - trigger event collection (`consumeTriggerEvents`) for non-blocking gameplay volumes
 
 This keeps deterministic movement authority while adding practical gameplay signaling needed for interactions (checkpoints, doors, scripted beats, etc.).
+
+## 18) Playable Runtime Vertical Slice (Beyond Test-Only Validation)
+
+RCAE now includes a playable CLI runtime app (`rcae_game_app`) that loads authored level data and runs an interactive update loop.
+
+Current vertical-slice behaviors:
+- level load from ASCII map files
+- player movement commands (W/A/S/D)
+- collision against static blockers
+- trigger event emission and log output
+- live frame rendering after each tick
+
+This moves the repository from test-only validation toward an actual executable gameplay loop that can be iterated and demonstrated.
