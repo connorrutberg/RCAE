@@ -36,6 +36,7 @@ public:
     std::string renderFrame(const Camera2D& camera,
                             const std::vector<SpriteInstance>& instances,
                             char clearGlyph = '.') const;
+                            char clearGlyph = '.');
 
 private:
     static bool inView(const Camera2D& camera, const SpriteInstance& instance);
