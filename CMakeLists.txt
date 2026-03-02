@@ -44,6 +44,8 @@ add_library(rcae_game_runtime_capi SHARED
 target_link_libraries(rcae_game_runtime_capi PRIVATE rcae_game_runtime_lib)
 target_include_directories(rcae_game_runtime_capi PUBLIC include)
 
+target_link_libraries(rcae_scene_lib PUBLIC rcae_rendering_lib)
+
 add_library(rcae_editor_lib
     tools/editor_cpp/src/EditorApp.cpp
 )

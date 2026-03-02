@@ -15,6 +15,7 @@ int main(int argc, char** argv) {
 
     std::cout << "RCAE Game App\n";
     std::cout << "Commands: w/a/s/d, stop, tick, run <n>, click <button_id>, show, quit\n\n";
+    std::cout << "Commands: w/a/s/d, stop, tick, run <n>, show, quit\n\n";
     std::cout << app.frame() << "\n";
 
     std::string cmd;
@@ -46,6 +47,24 @@ int main(int argc, char** argv) {
         } else if (cmd == "show") {
             input.type = rcae::runtime::InputCommandType::Show;
         } else {
+        if (cmd == "quit") break;
+
+        if (cmd == "w") app.setPlayerVelocity(0, -1);
+        else if (cmd == "a") app.setPlayerVelocity(-1, 0);
+        else if (cmd == "s") app.setPlayerVelocity(0, 1);
+        else if (cmd == "d") app.setPlayerVelocity(1, 0);
+        else if (cmd == "stop") app.setPlayerVelocity(0, 0);
+        else if (cmd.rfind("run ", 0) == 0) {
+            int n = std::stoi(cmd.substr(4));
+            for (int i = 0; i < n; ++i) app.tick();
+            std::cout << app.frame() << "\n";
+            const auto events = app.consumeEventLog();
+            if (!events.empty()) std::cout << events;
+            continue;
+        } else if (cmd == "show") {
+            std::cout << app.frame() << "\n";
+            continue;
+        } else if (cmd != "tick") {
             std::cout << "unknown command\n";
             continue;
         }
@@ -54,6 +73,7 @@ int main(int argc, char** argv) {
             break;
         }
 
+        app.tick();
         std::cout << app.frame() << "\n";
         const auto events = app.consumeEventLog();
         if (!events.empty()) std::cout << events;

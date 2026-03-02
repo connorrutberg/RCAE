@@ -8,6 +8,7 @@ namespace rcae::rendering {
 std::string Renderer2D::renderFrame(const Camera2D& camera,
                                     const std::vector<SpriteInstance>& instances,
                                     char clearGlyph) const {
+                                    char clearGlyph) {
     if (camera.width <= 0 || camera.height <= 0) {
         return "";
     }
