@@ -1,21 +1,6 @@
 # RCAE Project
 
-This is the complete project structure for the RCAE (Robust Continuous Adaptive Engine).
-
-## Project Structure
-
-```
-RCAE/
-├── core/
-│   ├── engine.py
-│   ├── utils.py
-│   └── config.py
-├── tests/
-│   ├── test_engine.py
-│   └── test_utils.py
-├── README.md
-└── requirements.txt
-```
+This is the complete project structure for the RCAE my custom game engine that is being developed in C++ and C# with LUA on the side for other features.
 
 ## Core Engine Files
 
