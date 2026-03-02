@@ -14,6 +14,7 @@ int main(int argc, char** argv) {
     }
 
     std::cout << "RCAE Game App\n";
+    std::cout << "Commands: w/a/s/d, stop, tick, run <n>, click <button_id>, show, quit\n\n";
     std::cout << "Commands: w/a/s/d, stop, tick, run <n>, show, quit\n\n";
     std::cout << app.frame() << "\n";
 
@@ -21,6 +22,31 @@ int main(int argc, char** argv) {
     while (true) {
         std::cout << "game> ";
         if (!std::getline(std::cin, cmd)) break;
+
+        rcae::runtime::InputCommand input;
+        if (cmd == "quit") {
+            input.type = rcae::runtime::InputCommandType::Quit;
+        } else if (cmd == "w") {
+            input = {rcae::runtime::InputCommandType::Move, 0, -1, 1, ""};
+        } else if (cmd == "a") {
+            input = {rcae::runtime::InputCommandType::Move, -1, 0, 1, ""};
+        } else if (cmd == "s") {
+            input = {rcae::runtime::InputCommandType::Move, 0, 1, 1, ""};
+        } else if (cmd == "d") {
+            input = {rcae::runtime::InputCommandType::Move, 1, 0, 1, ""};
+        } else if (cmd == "stop") {
+            input.type = rcae::runtime::InputCommandType::Stop;
+        } else if (cmd == "tick") {
+            input.type = rcae::runtime::InputCommandType::Tick;
+        } else if (cmd.rfind("run ", 0) == 0) {
+            input.type = rcae::runtime::InputCommandType::RunTicks;
+            input.ticks = std::stoi(cmd.substr(4));
+        } else if (cmd.rfind("click ", 0) == 0) {
+            input.type = rcae::runtime::InputCommandType::ClickButton;
+            input.target = cmd.substr(6);
+        } else if (cmd == "show") {
+            input.type = rcae::runtime::InputCommandType::Show;
+        } else {
         if (cmd == "quit") break;
 
         if (cmd == "w") app.setPlayerVelocity(0, -1);
@@ -41,6 +67,10 @@ int main(int argc, char** argv) {
         } else if (cmd != "tick") {
             std::cout << "unknown command\n";
             continue;
+        }
+
+        if (!app.executeCommand(input)) {
+            break;
         }
 
         app.tick();

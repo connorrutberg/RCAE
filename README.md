@@ -47,3 +47,8 @@ Build and run the interactive runtime slice:
 - `cmake -S . -B build`
 - `cmake --build build`
 - `./build/rcae_game_app games/game_alpha/content/levels/level_01.map`
+
+
+Inside `rcae_game_app`, supported runtime commands include `w/a/s/d`, `tick`, `run <n>`, `click <button_id>`, `show`, and `quit`.
+
+- C# visual bridge sample: `tools/editor/workflows/selection_binding/GameRuntimeVisualBridge.cs` (drives `rcae_game_runtime_capi`).

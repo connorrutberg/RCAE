@@ -21,11 +21,29 @@ add_library(rcae_rendering_lib
     engine/rendering/Renderer.cpp
 )
 target_include_directories(rcae_rendering_lib PUBLIC include)
+set_target_properties(rcae_rendering_lib PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 add_library(rcae_scene_lib
     engine/runtime/scene/SceneWorld.cpp
 )
 target_include_directories(rcae_scene_lib PUBLIC include)
+set_target_properties(rcae_scene_lib PROPERTIES POSITION_INDEPENDENT_CODE ON)
+target_link_libraries(rcae_scene_lib PUBLIC rcae_rendering_lib)
+
+add_library(rcae_game_runtime_lib
+    engine/runtime/GameRuntimeApp.cpp
+    engine/runtime/FrameOrchestrator.cpp
+)
+target_include_directories(rcae_game_runtime_lib PUBLIC include)
+set_target_properties(rcae_game_runtime_lib PROPERTIES POSITION_INDEPENDENT_CODE ON)
+target_link_libraries(rcae_game_runtime_lib PUBLIC rcae_scene_lib)
+
+add_library(rcae_game_runtime_capi SHARED
+    engine/runtime/GameRuntimeCAPI.cpp
+)
+target_link_libraries(rcae_game_runtime_capi PRIVATE rcae_game_runtime_lib)
+target_include_directories(rcae_game_runtime_capi PUBLIC include)
+
 target_link_libraries(rcae_scene_lib PUBLIC rcae_rendering_lib)
 
 add_library(rcae_editor_lib
@@ -75,3 +93,8 @@ add_test(NAME rcae_scene_world_tests COMMAND rcae_scene_world_tests)
 add_executable(rcae_game_runtime_app_tests tests/cpp/test_game_runtime_app.cpp)
 target_link_libraries(rcae_game_runtime_app_tests PRIVATE rcae_game_runtime_lib)
 add_test(NAME rcae_game_runtime_app_tests COMMAND rcae_game_runtime_app_tests)
+
+add_executable(rcae_game_runtime_capi_tests tests/cpp/test_game_runtime_capi.cpp)
+target_link_libraries(rcae_game_runtime_capi_tests PRIVATE rcae_game_runtime_capi)
+add_test(NAME rcae_game_runtime_capi_tests COMMAND rcae_game_runtime_capi_tests)
+set_target_properties(rcae_game_runtime_capi_tests PROPERTIES BUILD_RPATH "$<TARGET_FILE_DIR:rcae_game_runtime_capi>")

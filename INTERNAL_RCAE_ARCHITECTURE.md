@@ -531,3 +531,23 @@ Current vertical-slice behaviors:
 - live frame rendering after each tick
 
 This moves the repository from test-only validation toward an actual executable gameplay loop that can be iterated and demonstrated.
+
+## 19) Runtime Interfaces + Frame Orchestrator + UI Event Path
+
+To support scaling beyond a prototype, the runtime now follows explicit interface boundaries:
+
+- `IWorldSimulation` for world update + frame production
+- `IEventBus` for decoupled event publication/consumption
+- `IUISystem` for UI controls (buttons) and click dispatch
+- `InputCommand` + `FrameOrchestrator` for deterministic frame-stage command execution
+
+This adds a maintainable seam for upcoming systems (physics backends, richer UI controls, editor-driven actions) without tightly coupling the CLI app to concrete runtime internals.
+
+## 20) C# Visual Front-End Path via Game Runtime C API
+
+To align with a Source 2-style modular split (tooling/front-end in managed code, runtime/back-end in C++), RCAE now exposes a game-runtime C API boundary:
+
+- native API surface: `GameRuntimeCAPI`
+- managed bridge sample: `GameRuntimeVisualBridge.cs`
+
+This lets C# visual/editor tools drive the same runtime loop (level load, movement commands, button clicks, frame reads, event drains) without embedding runtime logic directly in C#.
